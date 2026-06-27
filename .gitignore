@@ -1,0 +1,41 @@
+# --- working plan (do NOT commit; deleted at completion) ---
+PLAN.md
+
+# --- node / next.js (frontend) ---
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- python / fastapi (backend) ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# --- database (SQLite file is generated, not committed) ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- env & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- editor / os ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- logs ---
+*.log
+npm-debug.log*
