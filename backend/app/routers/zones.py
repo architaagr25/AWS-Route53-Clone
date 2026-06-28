@@ -6,11 +6,9 @@ Route 53 creates, so a brand-new zone looks authentic instead of empty.
 import secrets
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-
-from fastapi import Response
 
 from ..auth import get_current_user
 from ..bind import parse_bind_zone, records_to_bind, zone_to_json
