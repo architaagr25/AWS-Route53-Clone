@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* AWS-style base. The full Route 53 color palette is added with the app shell
+   (Step 10); for now we set a neutral console background and a system font
+   stack close to Amazon Ember. */
+:root {
+  --background: #f2f3f3; /* AWS console page background */
+  --foreground: #16191f; /* AWS text color */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
