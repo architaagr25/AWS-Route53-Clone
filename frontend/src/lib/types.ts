@@ -61,6 +61,13 @@ export interface RecordInput {
   routing_policy?: string;
 }
 
+/** Summary returned by bulk operations. */
+export interface BulkResult {
+  created: number;
+  deleted: number;
+  errors: string[];
+}
+
 /** The DNS record types a user can create (SOA is system-managed). */
 export const RECORD_TYPES = [
   "A",

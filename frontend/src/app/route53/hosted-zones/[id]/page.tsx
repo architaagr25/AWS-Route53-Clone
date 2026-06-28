@@ -195,6 +195,26 @@ export default function ZoneDetailPage() {
           />
         </div>
 
+        {/* Bulk selection action bar */}
+        {selectedRecords.length > 0 && (
+          <div className="flex items-center justify-between border-b border-aws-border bg-aws-bg px-3 py-2 text-sm">
+            <span className="text-aws-text">
+              {selectedRecords.length} selected
+            </span>
+            <div className="flex items-center gap-2">
+              <Button variant="danger" onClick={() => setDeleteOpen(true)}>
+                Delete selected
+              </Button>
+              <button
+                onClick={() => setSelected(new Set())}
+                className="text-aws-link hover:underline"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <Spinner />
         ) : items.length === 0 ? (
@@ -281,6 +301,7 @@ export default function ZoneDetailPage() {
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onDeleted={refresh}
+        zoneId={zoneId}
         records={selectedRecords}
       />
     </div>

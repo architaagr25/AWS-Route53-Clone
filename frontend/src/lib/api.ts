@@ -7,6 +7,7 @@
  *   so UI code can show them in toasts / inline form errors.
  */
 import type {
+  BulkResult,
   DnsRecord,
   HostedZone,
   LoginResponse,
@@ -135,4 +136,9 @@ export const records = {
     }),
   remove: (recordId: number) =>
     request<void>(`/api/records/${recordId}`, { method: "DELETE" }),
+  bulkDelete: (zoneId: string, ids: number[]) =>
+    request<BulkResult>(`/api/zones/${zoneId}/records/bulk-delete`, {
+      method: "POST",
+      body: JSON.stringify({ ids }),
+    }),
 };

@@ -13,7 +13,14 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..models import DnsRecord, HostedZone, User
-from ..schemas import RecordCreate, RecordList, RecordOut, RecordUpdate
+from ..schemas import (
+    BulkDeleteRequest,
+    BulkResult,
+    RecordCreate,
+    RecordList,
+    RecordOut,
+    RecordUpdate,
+)
 from ..validation import ValidationError, validate_record
 
 router = APIRouter(prefix="/api", tags=["records"])
@@ -172,3 +179,31 @@ def delete_record(
     _refresh_count(db, zone_id)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/zones/{zone_id}/records/bulk-delete", response_model=BulkResult)
+def bulk_delete_records(
+    zone_id: str,
+    payload: BulkDeleteRequest,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Delete many records in one request. The SOA record is skipped (it cannot
+    be deleted), and the result reports how many were deleted plus any skips."""
+    _get_zone_or_404(db, zone_id)
+    result = BulkResult()
+    found = (
+        db.query(DnsRecord)
+        .filter(DnsRecord.zone_id == zone_id, DnsRecord.id.in_(payload.ids))
+        .all()
+    )
+    for record in found:
+        if record.type == "SOA":
+            result.errors.append("The SOA record cannot be deleted")
+            continue
+        db.delete(record)
+        result.deleted += 1
+    db.flush()
+    _refresh_count(db, zone_id)
+    db.commit()
+    return result

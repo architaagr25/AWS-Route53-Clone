@@ -17,10 +17,17 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onDeleted: () => void;
+  zoneId: string;
   records: DnsRecord[];
 }
 
-export default function DeleteRecordsDialog({ open, onClose, onDeleted, records }: Props) {
+export default function DeleteRecordsDialog({
+  open,
+  onClose,
+  onDeleted,
+  zoneId,
+  records,
+}: Props) {
   const { showToast } = useToast();
   const [deleting, setDeleting] = useState(false);
 
@@ -30,11 +37,15 @@ export default function DeleteRecordsDialog({ open, onClose, onDeleted, records 
   async function handleDelete() {
     setDeleting(true);
     try {
-      await Promise.all(deletable.map((r) => recordsApi.remove(r.id)));
+      // One bulk request instead of one DELETE per record.
+      const result = await recordsApi.bulkDelete(
+        zoneId,
+        deletable.map((r) => r.id)
+      );
       showToast(
-        deletable.length === 1
+        result.deleted === 1
           ? "Record deleted."
-          : `${deletable.length} records deleted.`,
+          : `${result.deleted} records deleted.`,
         "success"
       );
       onDeleted();
