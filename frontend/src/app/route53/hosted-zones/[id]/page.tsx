@@ -167,8 +167,8 @@ export default function ZoneDetailPage() {
       <div className="rounded border border-aws-border bg-aws-surface">
         {/* Toolbar: search + type filter + pagination */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-aws-border p-3">
-          <div className="flex items-center gap-2">
-            <div className="w-64">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+            <div className="w-full sm:w-56">
               <SearchInput
                 value={search}
                 onChange={(v) => {

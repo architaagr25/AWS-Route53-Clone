@@ -16,7 +16,7 @@ export default function Pagination({ page, pageSize, total, onPageChange }: Prop
 
   return (
     <div className="flex items-center justify-end gap-3 text-sm text-aws-text-secondary">
-      <span>
+      <span className="whitespace-nowrap">
         {start}-{end} of {total}
       </span>
       <div className="flex">

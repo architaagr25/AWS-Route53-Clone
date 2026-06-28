@@ -57,12 +57,15 @@ export default function TopBar() {
         </Link>
       </div>
 
-      {/* Right cluster */}
+      {/* Right cluster — help and region hide on small screens to save space */}
       <div className="flex items-center gap-1">
-        <button className="rounded px-2 py-1 hover:bg-aws-squid-light" aria-label="Help">
+        <button
+          className="hidden rounded px-2 py-1 hover:bg-aws-squid-light sm:block"
+          aria-label="Help"
+        >
           ?
         </button>
-        <button className="flex items-center gap-1 rounded px-2 py-1 hover:bg-aws-squid-light">
+        <button className="hidden items-center gap-1 rounded px-2 py-1 hover:bg-aws-squid-light sm:flex">
           Global <Caret />
         </button>
         <ThemeToggle />

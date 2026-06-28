@@ -125,8 +125,8 @@ export default function HostedZonesPage() {
       </div>
 
       <div className="rounded border border-aws-border bg-aws-surface">
-        <div className="flex items-center justify-between gap-3 border-b border-aws-border p-3">
-          <div className="w-72">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-aws-border p-3">
+          <div className="w-full sm:w-72">
             <SearchInput
               value={search}
               onChange={onSearchChange}
