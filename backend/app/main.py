@@ -13,13 +13,20 @@ from fastapi.middleware.cors import CORSMiddleware
 # Importing models registers the three tables on Base.metadata so that
 # create_all() below knows to create them.
 from . import models  # noqa: F401  (imported for its side effect)
-from .database import Base, engine
+from .database import Base, SessionLocal, engine
+from .routers import auth
+from .seed import seed
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Run once when the server starts: create any missing tables."""
+    """Run once when the server starts: create tables and seed baseline data."""
     Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    try:
+        seed(db)
+    finally:
+        db.close()
     yield
 
 
@@ -44,6 +51,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Mount the auth endpoints (more routers added in later steps).
+app.include_router(auth.router)
 
 
 @app.get("/api/health", tags=["health"])
