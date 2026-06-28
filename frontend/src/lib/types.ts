@@ -68,6 +68,26 @@ export interface BulkResult {
   errors: string[];
 }
 
+/** A record parsed from a BIND zone file (import preview). */
+export interface ParsedRecord {
+  name: string;
+  type: string;
+  value: string;
+  ttl: number;
+  routing_policy: string;
+}
+
+export interface ImportPreview {
+  preview: ParsedRecord[];
+  count: number;
+  errors: string[];
+}
+
+export interface ImportResult {
+  imported: number;
+  errors: string[];
+}
+
 /** The DNS record types a user can create (SOA is system-managed). */
 export const RECORD_TYPES = [
   "A",

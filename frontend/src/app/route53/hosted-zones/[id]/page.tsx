@@ -20,6 +20,7 @@ import Spinner from "@/components/ui/Spinner";
 import CreateRecordModal from "@/components/features/CreateRecordModal";
 import EditRecordModal from "@/components/features/EditRecordModal";
 import DeleteRecordsDialog from "@/components/features/DeleteRecordsDialog";
+import ImportZoneModal from "@/components/features/ImportZoneModal";
 import { ApiError, records, zones } from "@/lib/api";
 import type { DnsRecord, HostedZone, RecordList } from "@/lib/types";
 
@@ -43,6 +44,7 @@ export default function ZoneDetailPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   // Load the zone (for the header). Re-run after record changes to refresh the count.
   const loadZone = useCallback(() => {
@@ -150,6 +152,9 @@ export default function ZoneDetailPage() {
             onClick={() => setDeleteOpen(true)}
           >
             Delete
+          </Button>
+          <Button variant="secondary" onClick={() => setImportOpen(true)}>
+            Import
           </Button>
           <Button variant="primary" onClick={() => setCreateOpen(true)}>
             Create record
@@ -303,6 +308,12 @@ export default function ZoneDetailPage() {
         onDeleted={refresh}
         zoneId={zoneId}
         records={selectedRecords}
+      />
+      <ImportZoneModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImported={refresh}
+        zoneId={zoneId}
       />
     </div>
   );

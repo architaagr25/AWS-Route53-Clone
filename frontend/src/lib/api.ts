@@ -10,6 +10,8 @@ import type {
   BulkResult,
   DnsRecord,
   HostedZone,
+  ImportPreview,
+  ImportResult,
   LoginResponse,
   RecordInput,
   RecordList,
@@ -108,6 +110,17 @@ export const zones = {
     }),
   remove: (id: string) =>
     request<void>(`/api/zones/${id}`, { method: "DELETE" }),
+  // BIND import: preview (no commit) then import (commit).
+  importPreview: (id: string, content: string) =>
+    request<ImportPreview>(`/api/zones/${id}/import`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    }),
+  importCommit: (id: string, content: string) =>
+    request<ImportResult>(`/api/zones/${id}/import?commit=true`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    }),
 };
 
 // --- DNS Records ---

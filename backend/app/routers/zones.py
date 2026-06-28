@@ -13,9 +13,11 @@ from sqlalchemy.orm import Session
 from fastapi import Response
 
 from ..auth import get_current_user
+from ..bind import parse_bind_zone
 from ..database import get_db
 from ..models import DnsRecord, HostedZone, User
 from ..schemas import ZoneCreate, ZoneList, ZoneOut, ZoneUpdate
+from ..validation import ValidationError, validate_record
 
 router = APIRouter(prefix="/api/zones", tags=["zones"])
 
@@ -139,3 +141,46 @@ def delete_zone(
     db.delete(zone)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/{zone_id}/import")
+def import_bind(
+    zone_id: str,
+    body: dict,
+    commit: bool = Query(False),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Import records from a BIND zone file.
+
+    With commit=false (default) returns a preview of the records that would be
+    added plus any errors. With commit=true the valid records are persisted.
+    SOA records in the file are skipped (the zone already has one).
+    """
+    zone = _get_zone_or_404(db, zone_id)
+    content = (body or {}).get("content", "")
+    if not content.strip():
+        raise HTTPException(status_code=400, detail="Empty zone file")
+
+    parsed, errors = parse_bind_zone(content, zone.name)
+
+    valid = []
+    for rec in parsed:
+        if rec["type"] == "SOA":
+            errors.append("SOA record skipped (the zone already has one)")
+            continue
+        try:
+            validate_record(rec["type"], rec["value"])
+            valid.append(rec)
+        except ValidationError as e:
+            errors.append(f"{rec['name']} {rec['type']}: {e}")
+
+    if commit:
+        for rec in valid:
+            db.add(DnsRecord(zone_id=zone.id, **rec))
+        db.flush()
+        _refresh_count(db, zone)
+        db.commit()
+        return {"imported": len(valid), "errors": errors}
+
+    return {"preview": valid, "count": len(valid), "errors": errors}
