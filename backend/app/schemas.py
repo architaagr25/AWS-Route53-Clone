@@ -96,8 +96,8 @@ class RecordBase(BaseModel):
     def run_value_validation(self) -> None:
         """Apply the per-type DNS value rules from validation.py.
 
-        Called by the route after the model is built (the record type and value
-        are both needed together, so this is a method rather than a field rule).
+        Called by the route after the model is built, since validating the value
+        needs the type too (so it can't be a single-field validator).
         """
         try:
             validate_record(self.type, self.value)
@@ -135,7 +135,7 @@ class RecordList(BaseModel):
     page_size: int
 
 
-# --- Bulk operations (bonus, used in Step 16) ---
+# --- Bulk operations ---
 class BulkDeleteRequest(BaseModel):
     ids: List[int]
 

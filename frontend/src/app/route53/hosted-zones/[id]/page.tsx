@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Zone detail page — the records inside one hosted zone, shown in an AWS-style
- * table with search, a record-type filter, and pagination. Create/edit/delete
- * records are wired in 13b and 13c.
+ * Zone detail page — the records inside one hosted zone, in an AWS-style table
+ * with search, a record-type filter, and pagination, plus create / edit /
+ * delete / import / export actions.
  */
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -90,7 +90,7 @@ export default function ZoneDetailPage() {
   function refresh() {
     setSelected(new Set());
     loadRecords();
-    loadZone(); // record_count changed
+    loadZone(); // refresh the header's record_count
   }
 
   const items = data?.items ?? [];

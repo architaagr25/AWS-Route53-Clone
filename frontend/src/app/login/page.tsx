@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Login page — AWS sign-in style. Prefilled with the demo credentials so a
- * grader can sign in instantly. On success, redirects into the console.
+ * Login page, styled like the AWS sign-in. On success it redirects into the
+ * console; demo credentials are shown under the form.
  */
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

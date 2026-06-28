@@ -39,6 +39,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  // Flip the theme, toggle the <html> class, and remember the choice.
   function toggle() {
     setTheme((prev) => {
       const next = prev === "light" ? "dark" : "light";

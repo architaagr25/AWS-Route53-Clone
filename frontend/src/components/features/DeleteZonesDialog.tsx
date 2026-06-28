@@ -2,7 +2,7 @@
 
 /**
  * Confirmation dialog for deleting one or more hosted zones. Warns that the
- * zones' records are removed too (the backend cascade), matching Route 53.
+ * zones' records are removed too — the backend cascades the delete, like Route 53.
  */
 import { useState } from "react";
 

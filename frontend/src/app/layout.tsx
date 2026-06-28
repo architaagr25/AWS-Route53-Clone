@@ -1,3 +1,6 @@
+// Root layout: global metadata, fonts, and the app-wide providers
+// (theme, auth, toasts). The inline themeScript runs before paint to avoid a
+// flash of the wrong theme.
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";

@@ -105,7 +105,7 @@ def create_record(
     """Create a DNS record after validating its value against its type."""
     zone = _get_zone_or_404(db, zone_id)
     try:
-        payload.run_value_validation()  # per-type DNS rules from Step 5
+        payload.run_value_validation()  # per-type DNS value rules
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     record = DnsRecord(

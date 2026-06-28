@@ -1,11 +1,6 @@
-/**
- * Typed API client for the FastAPI backend.
- *
- * - Reads the backend base URL from NEXT_PUBLIC_API_URL.
- * - Stores the session token in localStorage and attaches it to every request.
- * - Surfaces backend error messages (the `detail` field) as a thrown ApiError,
- *   so UI code can show them in toasts / inline form errors.
- */
+// Typed client for the backend API. Reads the base URL from NEXT_PUBLIC_API_URL,
+// attaches the saved token to each request, and turns error responses into ApiError
+// so the UI can show the backend's message.
 import type {
   BulkResult,
   DnsRecord,

@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * Create-or-edit hosted zone modal.
- * - Create mode (no `zone`): name + type + comment, all editable.
- * - Edit mode (`zone` given): only the comment is editable (name/type are fixed
- *   once a zone exists, matching Route 53).
+ * Create/edit a hosted zone.
+ * - Create (no `zone`): name, type and comment are all editable.
+ * - Edit (`zone` given): only the comment is editable — name and type are fixed
+ *   once the zone exists, like Route 53.
  */
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export default function ZoneFormModal({ open, onClose, onSaved, zone }: Props) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // Initialise the fields each time the modal opens (from the zone, if editing).
+  // Reset the fields each time the modal opens (from the zone, if editing).
   useEffect(() => {
     if (open) {
       setName(zone ? zone.name.replace(/\.$/, "") : "");

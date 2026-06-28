@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Hosted Zones list page — AWS-style table with server-side search and
- * pagination, plus create / edit / delete actions.
+ * Hosted zones list — AWS-style table with server-side search and pagination,
+ * plus create / edit / delete actions.
  */
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";

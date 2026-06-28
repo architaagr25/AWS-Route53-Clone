@@ -15,6 +15,7 @@ export default function ExportMenu({ zoneId }: { zoneId: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Close the dropdown on any click outside of it.
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);

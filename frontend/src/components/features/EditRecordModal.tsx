@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Edit-record modal. The record name and type are fixed (as in Route 53 — you
- * delete and recreate to change those); only the value and TTL are editable.
- * The new value is re-validated against the existing type by the backend.
+ * Edit a record. Name and type are fixed — like Route 53, you delete and
+ * recreate to change those — so only the value and TTL are editable. The new
+ * value is re-validated against the existing type by the backend.
  */
 import { useEffect, useState } from "react";
 

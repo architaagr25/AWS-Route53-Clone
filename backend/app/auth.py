@@ -1,12 +1,8 @@
-"""Mocked authentication: stateless, signed session tokens over the user table.
+"""Mocked auth: stateless, signed session tokens backed by the users table.
 
-The assignment asks for a SIMPLE, mocked auth system (login, logout, session
-persistence). We are NOT building real security here.
-
-Design choice: tokens are stateless and signed with a static secret. "Stateless"
-means the server stores no session list — it can verify a token just by checking
-its signature. This is what makes session persistence survive a server restart:
-the frontend keeps the token in localStorage and the backend still trusts it.
+Tokens are signed with a static secret and carry no server-side session state,
+so they keep working across restarts — the frontend stores the token and the
+backend re-verifies it by signature alone. Not real security, just a demo.
 """
 import base64
 import hashlib

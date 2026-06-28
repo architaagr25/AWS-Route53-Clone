@@ -1,3 +1,4 @@
+// Mocked Route 53 section — a placeholder, since the real feature is Hosted zones.
 import ComingSoon from "@/components/shell/ComingSoon";
 
 export const metadata = { title: "Dashboard" };

@@ -24,6 +24,7 @@ export default function AccountMenu() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
+  // Clear the session and send the user back to the login screen.
   function handleLogout() {
     logout();
     router.replace("/login");

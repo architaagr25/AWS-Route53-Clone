@@ -54,6 +54,7 @@ _DEMO_ZONES = [
 
 
 def seed(db: Session) -> None:
+    """Populate the demo user and zones on first run; idempotent per table."""
     # 1. Demo login account (only if no users exist).
     if db.query(User).count() == 0:
         db.add(User(username=DEMO_USERNAME, password=DEMO_PASSWORD))

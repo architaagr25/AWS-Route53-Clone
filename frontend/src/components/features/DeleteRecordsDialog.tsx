@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Confirmation dialog for deleting one or more DNS records.
- * The SOA record can't be deleted (as in Route 53); if selected, it is shown as
- * skipped and only the deletable records are removed.
+ * Confirmation dialog for deleting one or more DNS records. The SOA record can't
+ * be deleted (like Route 53); if it's in the selection it's shown as skipped and
+ * only the deletable records are removed.
  */
 import { useState } from "react";
 
@@ -37,7 +37,7 @@ export default function DeleteRecordsDialog({
   async function handleDelete() {
     setDeleting(true);
     try {
-      // One bulk request instead of one DELETE per record.
+      // Send the ids in one bulk request; the server skips the SOA.
       const result = await recordsApi.bulkDelete(
         zoneId,
         deletable.map((r) => r.id)

@@ -1,11 +1,7 @@
 /**
- * The dark AWS console top navigation bar (#232f3e).
- *
- * Left:  services menu icon, the "aws" logo, and the "Route 53" service name.
- * Right: help, region selector ("Global" for Route 53), and account menu.
- *
- * This is presentational for now; the account/region menus become interactive
- * (e.g. logout) once auth is wired in Step 11.
+ * Dark AWS console top bar (#232f3e).
+ * Left: services icon, the "aws" logo, the "Route 53" name.
+ * Right: help, region ("Global" for Route 53), theme toggle, account menu.
  */
 import Link from "next/link";
 

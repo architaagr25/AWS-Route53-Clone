@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Protects the console: only renders its children for a logged-in user.
+ * Front-end route protection for everything under /route53: only renders its
+ * children for a logged-in user.
  *
- * While the initial session check runs we show a neutral "loading" state; if no
- * user is found afterwards we redirect to /login. This is the front-end route
- * protection for everything under /route53.
+ * While the initial session check runs we show a loading state; if no user is
+ * found afterwards we redirect to /login.
  */
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";

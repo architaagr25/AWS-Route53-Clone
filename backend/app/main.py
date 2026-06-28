@@ -1,17 +1,11 @@
-"""FastAPI application entrypoint.
-
-Sets up CORS, creates the database tables on startup, and exposes a health
-route. We will grow it in later steps: seeding and the auth / zones / records
-routers.
-"""
+"""FastAPI app entrypoint: CORS, table creation + seeding on startup, routers."""
 import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Importing models registers the three tables on Base.metadata so that
-# create_all() below knows to create them.
+# import models so their tables register on Base before create_all()
 from . import models  # noqa: F401  (imported for its side effect)
 from .database import Base, SessionLocal, engine
 from .routers import auth, records, zones
@@ -53,7 +47,7 @@ app.add_middleware(
 )
 
 
-# Mount the API routers (more added in later steps).
+# Mount the auth, zones, and records API routers.
 app.include_router(auth.router)
 app.include_router(zones.router)
 app.include_router(records.router)

@@ -29,6 +29,7 @@ class ValidationError(Exception):
     """Raised when a record value is invalid for its type."""
 
 
+# The _check_* helpers raise ValidationError when a single value is malformed.
 def _check_ipv4(line: str) -> None:
     try:
         ipaddress.IPv4Address(line)

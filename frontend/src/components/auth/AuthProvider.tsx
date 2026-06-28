@@ -3,9 +3,9 @@
 /**
  * App-wide authentication state.
  *
- * Holds the current user, and exposes login/logout. On first load it tries to
- * restore the session: if a token is saved in localStorage, it calls /api/auth/me
- * to confirm the token is still valid and recover the user (session persistence).
+ * Holds the current user and exposes login/logout. On first load it restores the
+ * session: if a token is saved in localStorage, it calls /api/auth/me to confirm
+ * the token is still valid and recover the user.
  */
 import {
   createContext,
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     auth
       .me()
       .then(setUser)
-      .catch(() => clearToken()) // stale/invalid token -> drop it
+      .catch(() => clearToken()) // stale/invalid token, drop it
       .finally(() => setLoading(false));
   }, []);
 

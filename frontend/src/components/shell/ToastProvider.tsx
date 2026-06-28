@@ -48,6 +48,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((list) => list.filter((t) => t.id !== id));
   }, []);
 
+  // Add a toast and auto-dismiss it after 5s (it can also be closed manually).
   const showToast = useCallback(
     (message: string, type: ToastType = "success") => {
       const id = Date.now() + Math.random();

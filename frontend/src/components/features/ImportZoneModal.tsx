@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Import-from-BIND modal. Paste a zone file (or upload a .zone/.txt), Preview to
- * see the parsed records + any errors, then Import to persist them.
+ * Import records from a BIND zone file. Paste it (or upload a .zone/.txt),
+ * Preview to see the parsed records and any errors, then Import to persist them.
  */
 import { useEffect, useRef, useState } from "react";
 

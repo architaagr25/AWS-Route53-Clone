@@ -1,10 +1,9 @@
 "use client";
 
 /**
- * Create-record modal — the AWS "quick create" form for a DNS record:
- * record name (with the zone suffix shown), type (all 9 creatable types),
- * value (multi-line for multi-value records), and TTL. Per-type validation
- * errors from the backend surface as an inline alert.
+ * Quick-create form for a DNS record: name (with the zone suffix shown), type
+ * (all 9 creatable types), value (multi-line for multi-value records), and TTL.
+ * Per-type validation errors from the backend show up as an inline alert.
  */
 import { useEffect, useState } from "react";
 
@@ -22,7 +21,7 @@ interface Props {
   zoneName: string; // e.g. "example.com."
 }
 
-// A short hint shown under the value field, per record type.
+// Short hint shown under the value field, per record type.
 const VALUE_HINTS: Record<string, string> = {
   A: "IPv4 address, e.g. 192.0.2.1",
   AAAA: "IPv6 address, e.g. 2001:db8::1",
