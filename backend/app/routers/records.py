@@ -7,7 +7,7 @@ id directly (/api/records/{record_id}).
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
-from sqlalchemy import func, or_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -71,13 +71,9 @@ def list_records(
     if type:
         query = query.filter(DnsRecord.type == type.upper())
     if search:
+        # Search by record name only (matches the real Route 53 console).
         like = f"%{search.strip().lower()}%"
-        query = query.filter(
-            or_(
-                func.lower(DnsRecord.name).like(like),
-                func.lower(DnsRecord.value).like(like),
-            )
-        )
+        query = query.filter(func.lower(DnsRecord.name).like(like))
     total = query.count()
     items = (
         query.order_by(DnsRecord.name.asc(), DnsRecord.type.asc())
