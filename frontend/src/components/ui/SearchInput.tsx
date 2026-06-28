@@ -22,6 +22,7 @@ export default function SearchInput({ value, onChange, placeholder }: Props) {
         <path d="M21 21l-4.3-4.3" strokeLinecap="round" />
       </svg>
       <input
+        data-shortcut="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? "Search"}
