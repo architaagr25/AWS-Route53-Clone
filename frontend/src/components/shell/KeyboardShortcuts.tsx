@@ -52,8 +52,17 @@ export default function KeyboardShortcuts() {
       }
     }
 
+    // The top-bar "?" button opens this overlay via a custom event.
+    function onShow() {
+      setHelpOpen(true);
+    }
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("r53:show-shortcuts", onShow);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("r53:show-shortcuts", onShow);
+    };
   }, []);
 
   return (

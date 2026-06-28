@@ -8,6 +8,8 @@ import Link from "next/link";
 import AccountMenu from "./AccountMenu";
 import ThemeToggle from "./ThemeToggle";
 import SidebarToggle from "./SidebarToggle";
+import HelpButton from "./HelpButton";
+import RegionMenu from "./RegionMenu";
 
 function AwsLogo() {
   // A compact stand-in for the AWS smile logo: lowercase wordmark + orange arc.
@@ -31,14 +33,6 @@ function AwsLogo() {
   );
 }
 
-function Caret() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor" aria-hidden>
-      <path d="M2 4l4 4 4-4z" />
-    </svg>
-  );
-}
-
 export default function TopBar() {
   return (
     <header className="flex h-10 items-center justify-between bg-aws-squid px-3 text-sm text-white">
@@ -59,15 +53,8 @@ export default function TopBar() {
 
       {/* Right cluster — help and region hide on small screens to save space */}
       <div className="flex items-center gap-1">
-        <button
-          className="hidden rounded px-2 py-1 hover:bg-aws-squid-light sm:block"
-          aria-label="Help"
-        >
-          ?
-        </button>
-        <button className="hidden items-center gap-1 rounded px-2 py-1 hover:bg-aws-squid-light sm:flex">
-          Global <Caret />
-        </button>
+        <HelpButton />
+        <RegionMenu />
         <ThemeToggle />
         <AccountMenu />
       </div>
