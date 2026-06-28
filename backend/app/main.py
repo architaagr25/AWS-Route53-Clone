@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 # import models so their tables register on Base before create_all()
 from . import models  # noqa: F401  (imported for its side effect)
@@ -51,6 +52,12 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(zones.router)
 app.include_router(records.router)
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    """Send anyone visiting the bare API URL to the interactive docs."""
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/api/health", tags=["health"])

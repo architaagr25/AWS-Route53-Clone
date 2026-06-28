@@ -28,7 +28,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { mobileOpen, close } = useSidebar();
+  const { desktopOpen, mobileOpen, close } = useSidebar();
 
   return (
     <>
@@ -41,14 +41,15 @@ export default function Sidebar() {
         />
       )}
 
-      {/* On mobile this is a fixed drawer that slides in; on md+ it's a normal
-          in-flow column that's always visible. */}
+      {/* Mobile: a fixed drawer that slides in/out (mobileOpen). Desktop: a normal
+          in-flow column, shown by default and hidden when collapsed (desktopOpen). */}
       <nav
         className={[
           "w-60 shrink-0 overflow-y-auto border-r border-aws-border bg-aws-surface",
           "fixed bottom-0 left-0 top-10 z-40 transition-transform",
-          "md:static md:top-auto md:z-auto md:translate-x-0 md:transition-none",
+          "md:static md:top-auto md:z-auto md:transition-none",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
+          desktopOpen ? "md:block md:translate-x-0" : "md:hidden",
         ].join(" ")}
       >
         <div className="px-4 py-3 text-[15px] font-bold text-aws-text">Route 53</div>
