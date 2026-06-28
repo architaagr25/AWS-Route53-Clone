@@ -13,7 +13,8 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..models import DnsRecord, HostedZone, User
-from ..schemas import RecordCreate, RecordList, RecordOut
+from ..schemas import RecordCreate, RecordList, RecordOut, RecordUpdate
+from ..validation import ValidationError, validate_record
 
 router = APIRouter(prefix="/api", tags=["records"])
 
@@ -118,3 +119,60 @@ def create_record(
     db.commit()
     db.refresh(record)
     return record
+
+
+def _get_record_or_404(db: Session, record_id: int) -> DnsRecord:
+    record = db.query(DnsRecord).filter(DnsRecord.id == record_id).first()
+    if not record:
+        raise HTTPException(status_code=404, detail="Record not found")
+    return record
+
+
+@router.put("/records/{record_id}", response_model=RecordOut)
+def update_record(
+    record_id: int,
+    payload: RecordUpdate,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Edit a record. The type is fixed once created (matching Route 53); a new
+    value is re-validated against that existing type before saving."""
+    record = _get_record_or_404(db, record_id)
+    zone = db.query(HostedZone).filter(HostedZone.id == record.zone_id).first()
+
+    if payload.value is not None:
+        try:
+            validate_record(record.type, payload.value)
+        except ValidationError as e:
+            raise HTTPException(status_code=422, detail=str(e))
+        record.value = payload.value.strip()
+    if payload.name is not None:
+        record.name = _normalize_name(payload.name, zone.name)
+    if payload.ttl is not None:
+        record.ttl = payload.ttl
+    if payload.routing_policy is not None:
+        record.routing_policy = payload.routing_policy
+
+    db.commit()
+    db.refresh(record)
+    return record
+
+
+@router.delete("/records/{record_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_record(
+    record_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Delete a record. The system SOA record cannot be deleted (as in Route 53)."""
+    record = _get_record_or_404(db, record_id)
+    if record.type == "SOA":
+        raise HTTPException(
+            status_code=400, detail="The SOA record cannot be deleted"
+        )
+    zone_id = record.zone_id
+    db.delete(record)
+    db.flush()
+    _refresh_count(db, zone_id)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
