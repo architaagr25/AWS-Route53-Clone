@@ -132,14 +132,14 @@ export default function ZoneDetailPage() {
         )}
       </div>
 
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold text-aws-text">
           Records{" "}
           <span className="text-sm font-normal text-aws-text-secondary">
             ({data?.total ?? 0})
           </span>
         </h2>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="secondary"
             disabled={selectedRecords.length !== 1}

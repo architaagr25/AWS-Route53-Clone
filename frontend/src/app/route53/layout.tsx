@@ -2,6 +2,7 @@ import TopBar from "@/components/shell/TopBar";
 import Sidebar from "@/components/shell/Sidebar";
 import AuthGuard from "@/components/auth/AuthGuard";
 import KeyboardShortcuts from "@/components/shell/KeyboardShortcuts";
+import { SidebarProvider } from "@/components/shell/SidebarProvider";
 
 /**
  * The console layout: every page under /route53 is wrapped with the AWS top bar,
@@ -15,14 +16,18 @@ export default function Route53Layout({
 }) {
   return (
     <AuthGuard>
-      <KeyboardShortcuts />
-      <div className="flex min-h-screen flex-col">
-        <TopBar />
-        <div className="flex flex-1">
-          <Sidebar />
-          <main className="flex-1 overflow-auto bg-aws-bg p-6">{children}</main>
+      <SidebarProvider>
+        <KeyboardShortcuts />
+        <div className="flex min-h-screen flex-col">
+          <TopBar />
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="min-w-0 flex-1 overflow-auto bg-aws-bg p-4 sm:p-6">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </SidebarProvider>
     </AuthGuard>
   );
 }

@@ -96,14 +96,14 @@ export default function HostedZonesPage() {
         ]}
       />
 
-      <div className="mt-2 mb-4 flex items-center justify-between">
+      <div className="mt-2 mb-4 flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold text-aws-text">
           Hosted zones{" "}
           <span className="text-base font-normal text-aws-text-secondary">
             ({data?.total ?? 0})
           </span>
         </h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="secondary"
             disabled={selectedZones.length !== 1}

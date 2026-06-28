@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import AccountMenu from "./AccountMenu";
 import ThemeToggle from "./ThemeToggle";
+import SidebarToggle from "./SidebarToggle";
 
 function AwsLogo() {
   // A compact stand-in for the AWS smile logo: lowercase wordmark + orange arc.
@@ -51,8 +52,9 @@ export default function TopBar() {
     <header className="flex h-10 items-center justify-between bg-aws-squid px-3 text-sm text-white">
       {/* Left cluster */}
       <div className="flex items-center gap-3">
+        <SidebarToggle />
         <button
-          className="flex items-center rounded p-1 hover:bg-aws-squid-light"
+          className="hidden items-center rounded p-1 hover:bg-aws-squid-light md:flex"
           aria-label="Open services menu"
         >
           <GridIcon />
