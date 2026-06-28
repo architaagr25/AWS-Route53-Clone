@@ -18,6 +18,8 @@ import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
 import Spinner from "@/components/ui/Spinner";
 import CreateRecordModal from "@/components/features/CreateRecordModal";
+import EditRecordModal from "@/components/features/EditRecordModal";
+import DeleteRecordsDialog from "@/components/features/DeleteRecordsDialog";
 import { ApiError, records, zones } from "@/lib/api";
 import type { DnsRecord, HostedZone, RecordList } from "@/lib/types";
 
@@ -39,6 +41,8 @@ export default function ZoneDetailPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   // Load the zone (for the header). Re-run after record changes to refresh the count.
   const loadZone = useCallback(() => {
@@ -77,6 +81,7 @@ export default function ZoneDetailPage() {
   }
 
   const items = data?.items ?? [];
+  const selectedRecords = items.filter((r) => selected.has(r.id));
   const allSelected = items.length > 0 && items.every((r) => selected.has(r.id));
 
   function toggleAll() {
@@ -121,9 +126,25 @@ export default function ZoneDetailPage() {
             ({data?.total ?? 0})
           </span>
         </h2>
-        <Button variant="primary" onClick={() => setCreateOpen(true)}>
-          Create record
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="secondary"
+            disabled={selectedRecords.length !== 1}
+            onClick={() => setEditOpen(true)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={selectedRecords.length === 0}
+            onClick={() => setDeleteOpen(true)}
+          >
+            Delete
+          </Button>
+          <Button variant="primary" onClick={() => setCreateOpen(true)}>
+            Create record
+          </Button>
+        </div>
       </div>
 
       <div className="rounded border border-aws-border bg-aws-surface">
@@ -237,6 +258,18 @@ export default function ZoneDetailPage() {
         onSaved={refresh}
         zoneId={zoneId}
         zoneName={zone?.name ?? zoneId}
+      />
+      <EditRecordModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSaved={refresh}
+        record={selectedRecords[0] ?? null}
+      />
+      <DeleteRecordsDialog
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onDeleted={refresh}
+        records={selectedRecords}
       />
     </div>
   );
