@@ -1,6 +1,3 @@
-# --- working plan (do NOT commit; deleted at completion) ---
-PLAN.md
-
 # --- node / next.js (frontend) ---
 node_modules/
 .next/
