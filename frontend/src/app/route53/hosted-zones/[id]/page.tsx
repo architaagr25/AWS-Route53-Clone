@@ -58,6 +58,10 @@ export default function ZoneDetailPage() {
     loadZone();
   }, [loadZone]);
 
+  useEffect(() => {
+    document.title = zone ? `${zone.name} | Route 53` : "Hosted zone | Route 53";
+  }, [zone]);
+
   const loadRecords = useCallback(() => {
     setLoading(true);
     records

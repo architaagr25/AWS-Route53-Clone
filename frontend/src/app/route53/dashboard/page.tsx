@@ -1,5 +1,7 @@
 import ComingSoon from "@/components/shell/ComingSoon";
 
+export const metadata = { title: "Dashboard" };
+
 export default function DashboardPage() {
   return (
     <ComingSoon

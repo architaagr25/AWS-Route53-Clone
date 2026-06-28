@@ -19,6 +19,10 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Sign in | Route 53";
+  }, []);
+
   // Already logged in? Skip the login screen.
   useEffect(() => {
     if (!loading && user) router.replace("/route53/hosted-zones");

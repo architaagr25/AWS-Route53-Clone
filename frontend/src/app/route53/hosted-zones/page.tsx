@@ -35,6 +35,10 @@ export default function HostedZonesPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
+  useEffect(() => {
+    document.title = "Hosted zones | Route 53";
+  }, []);
+
   const load = useCallback(() => {
     setLoading(true);
     zones

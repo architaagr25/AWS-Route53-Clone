@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Route 53 Management Console",
+  title: {
+    default: "Route 53 Management Console",
+    template: "%s | Route 53",
+  },
   description: "A clone of the AWS Route 53 console for managing hosted zones and DNS records.",
 };
 
