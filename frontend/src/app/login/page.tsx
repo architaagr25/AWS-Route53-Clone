@@ -14,8 +14,8 @@ export default function LoginPage() {
   const { user, loading, login } = useAuth();
   const router = useRouter();
 
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -74,6 +74,8 @@ export default function LoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               className="w-full rounded border border-aws-border px-3 py-1.5 text-sm focus:border-aws-link focus:outline-none"
               autoComplete="username"
+              placeholder="Enter your username"
+              required
             />
           </div>
           <div>
@@ -86,6 +88,8 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded border border-aws-border px-3 py-1.5 text-sm focus:border-aws-link focus:outline-none"
               autoComplete="current-password"
+              placeholder="Enter your password"
+              required
             />
           </div>
           <button
