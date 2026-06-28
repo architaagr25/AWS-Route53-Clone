@@ -201,7 +201,8 @@ export default function ZoneDetailPage() {
             }
           />
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-aws-table-header text-left text-xs uppercase tracking-wide text-aws-text-secondary">
               <tr className="border-b border-aws-border">
                 <th className="w-10 px-3 py-2">
@@ -244,6 +245,7 @@ export default function ZoneDetailPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
