@@ -12,10 +12,12 @@ import { useCallback, useEffect, useState } from "react";
 import Breadcrumbs from "@/components/shell/Breadcrumbs";
 import { useToast } from "@/components/shell/ToastProvider";
 import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
 import Spinner from "@/components/ui/Spinner";
+import CreateRecordModal from "@/components/features/CreateRecordModal";
 import { ApiError, records, zones } from "@/lib/api";
 import type { DnsRecord, HostedZone, RecordList } from "@/lib/types";
 
@@ -36,9 +38,10 @@ export default function ZoneDetailPage() {
   const [data, setData] = useState<RecordList | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [createOpen, setCreateOpen] = useState(false);
 
-  // Load the zone once (for the header).
-  useEffect(() => {
+  // Load the zone (for the header). Re-run after record changes to refresh the count.
+  const loadZone = useCallback(() => {
     zones
       .get(zoneId)
       .then(setZone)
@@ -46,6 +49,10 @@ export default function ZoneDetailPage() {
         showToast(err instanceof ApiError ? err.message : "Zone not found", "error")
       );
   }, [zoneId, showToast]);
+
+  useEffect(() => {
+    loadZone();
+  }, [loadZone]);
 
   const loadRecords = useCallback(() => {
     setLoading(true);
@@ -62,6 +69,12 @@ export default function ZoneDetailPage() {
     const timer = setTimeout(loadRecords, 250);
     return () => clearTimeout(timer);
   }, [loadRecords]);
+
+  function refresh() {
+    setSelected(new Set());
+    loadRecords();
+    loadZone(); // record_count changed
+  }
 
   const items = data?.items ?? [];
   const allSelected = items.length > 0 && items.every((r) => selected.has(r.id));
@@ -108,6 +121,9 @@ export default function ZoneDetailPage() {
             ({data?.total ?? 0})
           </span>
         </h2>
+        <Button variant="primary" onClick={() => setCreateOpen(true)}>
+          Create record
+        </Button>
       </div>
 
       <div className="rounded border border-aws-border bg-aws-surface">
@@ -214,6 +230,14 @@ export default function ZoneDetailPage() {
           ‹ Back to hosted zones
         </Link>
       </div>
+
+      <CreateRecordModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSaved={refresh}
+        zoneId={zoneId}
+        zoneName={zone?.name ?? zoneId}
+      />
     </div>
   );
 }
