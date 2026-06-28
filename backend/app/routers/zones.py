@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from fastapi import Response
 
 from ..auth import get_current_user
-from ..bind import parse_bind_zone
+from ..bind import parse_bind_zone, records_to_bind, zone_to_json
 from ..database import get_db
 from ..models import DnsRecord, HostedZone, User
 from ..schemas import ZoneCreate, ZoneList, ZoneOut, ZoneUpdate
@@ -184,3 +184,32 @@ def import_bind(
         return {"imported": len(valid), "errors": errors}
 
     return {"preview": valid, "count": len(valid), "errors": errors}
+
+
+@router.get("/{zone_id}/export")
+def export_zone(
+    zone_id: str,
+    format: str = Query("json", pattern="^(json|bind)$"),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Export a zone and all of its records as JSON or a BIND zone file.
+
+    Returns the file content with a Content-Disposition so browsers download it.
+    """
+    zone = _get_zone_or_404(db, zone_id)
+    records = db.query(DnsRecord).filter(DnsRecord.zone_id == zone_id).all()
+    base = zone.name.rstrip(".")
+
+    if format == "bind":
+        body = records_to_bind(zone, records)
+        media, filename = "text/plain", f"{base}.zone"
+    else:
+        body = zone_to_json(zone, records)
+        media, filename = "application/json", f"{base}.json"
+
+    return Response(
+        content=body,
+        media_type=media,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

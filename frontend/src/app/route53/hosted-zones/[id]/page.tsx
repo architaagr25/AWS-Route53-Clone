@@ -21,6 +21,7 @@ import CreateRecordModal from "@/components/features/CreateRecordModal";
 import EditRecordModal from "@/components/features/EditRecordModal";
 import DeleteRecordsDialog from "@/components/features/DeleteRecordsDialog";
 import ImportZoneModal from "@/components/features/ImportZoneModal";
+import ExportMenu from "@/components/features/ExportMenu";
 import { ApiError, records, zones } from "@/lib/api";
 import type { DnsRecord, HostedZone, RecordList } from "@/lib/types";
 
@@ -153,6 +154,7 @@ export default function ZoneDetailPage() {
           >
             Delete
           </Button>
+          <ExportMenu zoneId={zoneId} />
           <Button variant="secondary" onClick={() => setImportOpen(true)}>
             Import
           </Button>

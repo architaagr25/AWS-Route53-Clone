@@ -76,6 +76,37 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
+/**
+ * Download a zone export. The export endpoint is auth-protected, so we fetch it
+ * with the token (a plain <a href> wouldn't send the header), then trigger a
+ * browser download from the response blob.
+ */
+export async function downloadZoneExport(
+  zoneId: string,
+  format: "json" | "bind"
+): Promise<void> {
+  const token = getToken();
+  const res = await fetch(
+    `${BASE_URL}/api/zones/${zoneId}/export?format=${format}`,
+    { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+  );
+  if (!res.ok) throw new ApiError(res.status, "Export failed");
+
+  const blob = await res.blob();
+  const disposition = res.headers.get("Content-Disposition") ?? "";
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  const filename = match ? match[1] : `zone.${format === "bind" ? "zone" : "json"}`;
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 // --- Auth ---
 export const auth = {
   login: (username: string, password: string) =>
