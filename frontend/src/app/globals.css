@@ -1,11 +1,32 @@
 @import "tailwindcss";
 
-/* AWS-style base. The full Route 53 color palette is added with the app shell
-   (Step 10); for now we set a neutral console background and a system font
-   stack close to Amazon Ember. */
+/* ------------------------------------------------------------------ */
+/*  AWS Route 53 color palette                                         */
+/*  Defined as Tailwind v4 theme tokens, so each one generates utility */
+/*  classes like bg-aws-squid, text-aws-orange, border-aws-border.     */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-aws-squid: #232f3e; /* top nav / dark surfaces */
+  --color-aws-squid-light: #2a3f54; /* nav hover */
+  --color-aws-orange: #ff9900; /* primary accent */
+  --color-aws-orange-dark: #ec7211; /* button hover */
+  --color-aws-link: #0073bb; /* links */
+  --color-aws-link-hover: #0a4a87; /* link hover */
+  --color-aws-text: #16191f; /* primary text */
+  --color-aws-text-secondary: #545b64; /* muted text */
+  --color-aws-border: #d5dbdb; /* borders / dividers */
+  --color-aws-bg: #f2f3f3; /* page background */
+  --color-aws-surface: #ffffff; /* cards / panels */
+  --color-aws-table-header: #fafafa; /* table header row */
+  --color-aws-row-hover: #f5f7f7; /* table row hover */
+  --color-aws-success: #1d8102; /* success green */
+  --color-aws-error: #d13212; /* error red */
+  --color-aws-warning: #e9a000; /* warning amber */
+}
+
 :root {
-  --background: #f2f3f3; /* AWS console page background */
-  --foreground: #16191f; /* AWS text color */
+  --background: #f2f3f3;
+  --foreground: #16191f;
 }
 
 body {
@@ -13,4 +34,5 @@ body {
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  font-size: 14px;
 }
