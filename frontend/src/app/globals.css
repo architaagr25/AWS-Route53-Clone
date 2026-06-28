@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode: dark: utilities apply under a .dark ancestor. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ------------------------------------------------------------------ */
 /*  AWS Route 53 color palette                                         */
 /*  Defined as Tailwind v4 theme tokens, so each one generates utility */
@@ -27,6 +30,22 @@
 :root {
   --background: #f2f3f3;
   --foreground: #16191f;
+}
+
+/* Dark theme: override the SEMANTIC tokens (surfaces, text, borders) so every
+   bg-aws-bg / text-aws-text / border-aws-border re-themes automatically. The
+   brand colors (squid, orange) stay; link blue is lightened for contrast. */
+.dark {
+  --color-aws-bg: #0f1b2d;
+  --color-aws-surface: #16202e;
+  --color-aws-table-header: #1b2735;
+  --color-aws-row-hover: #1e2a3a;
+  --color-aws-text: #e3e8ee;
+  --color-aws-text-secondary: #9aa7b5;
+  --color-aws-border: #2a3a4d;
+  --color-aws-link: #5aa9e6;
+  --background: #0f1b2d;
+  --foreground: #e3e8ee;
 }
 
 body {

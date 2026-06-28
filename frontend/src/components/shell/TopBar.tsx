@@ -10,6 +10,7 @@
 import Link from "next/link";
 
 import AccountMenu from "./AccountMenu";
+import ThemeToggle from "./ThemeToggle";
 
 function AwsLogo() {
   // A compact stand-in for the AWS smile logo: lowercase wordmark + orange arc.
@@ -80,6 +81,7 @@ export default function TopBar() {
         <button className="flex items-center gap-1 rounded px-2 py-1 hover:bg-aws-squid-light">
           Global <Caret />
         </button>
+        <ThemeToggle />
         <AccountMenu />
       </div>
     </header>

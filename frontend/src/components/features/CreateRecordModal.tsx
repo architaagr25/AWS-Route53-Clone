@@ -103,7 +103,7 @@ export default function CreateRecordModal({
       }
     >
       {error && (
-        <div className="mb-4 rounded border-l-4 border-aws-error bg-red-50 px-3 py-2 text-sm text-aws-error">
+        <div className="mb-4 rounded border-l-4 border-aws-error bg-red-50 px-3 py-2 text-sm text-aws-error dark:bg-red-950/40">
           {error}
         </div>
       )}

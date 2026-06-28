@@ -3,6 +3,17 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/shell/ToastProvider";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { ThemeProvider } from "@/components/shell/ThemeProvider";
+
+// Runs before paint to apply the saved theme and avoid a flash of the wrong one.
+const themeScript = `
+try {
+  var t = localStorage.getItem('r53_theme');
+  if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+} catch (e) {}
+`;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +43,15 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
-        <AuthProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
