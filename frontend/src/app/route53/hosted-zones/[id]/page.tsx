@@ -78,6 +78,12 @@ export default function ZoneDetailPage() {
     return () => clearTimeout(timer);
   }, [loadRecords]);
 
+  // Clear the selection when the search, type filter, or page changes — the
+  // selected rows may no longer be visible (matches the AWS console).
+  useEffect(() => {
+    setSelected(new Set());
+  }, [search, typeFilter, page]);
+
   function refresh() {
     setSelected(new Set());
     loadRecords();

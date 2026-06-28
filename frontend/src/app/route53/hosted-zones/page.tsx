@@ -56,6 +56,12 @@ export default function HostedZonesPage() {
     return () => clearTimeout(timer);
   }, [load]);
 
+  // Clear the selection when the search or page changes (selected rows may no
+  // longer be visible) — matches the AWS console.
+  useEffect(() => {
+    setSelected(new Set());
+  }, [search, page]);
+
   function onSearchChange(value: string) {
     setSearch(value);
     setPage(1);
