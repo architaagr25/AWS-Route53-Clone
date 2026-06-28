@@ -6,23 +6,26 @@ Everything that talks to the database goes through here:
 - `Base`          : the parent class every ORM model (table) inherits from
 - `get_db()`      : a FastAPI dependency that opens a session per request
 """
+import os
 from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# The SQLite database is a single file living at backend/route53.db.
-# Using an absolute path means it does not matter which folder the server is
-# started from — it always finds the same database file.
+# DB lives in a single SQLite file at backend/route53.db by default. DATABASE_URL
+# can override it (tests point at a throwaway file; deploys at a mounted path).
+# The absolute default path means it's found no matter where the server starts.
 DB_PATH = Path(__file__).resolve().parent.parent / "route53.db"
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
+SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{DB_PATH}")
 
-# check_same_thread=False is required for SQLite under FastAPI, because FastAPI
-# may handle requests on different threads than the one that created the engine.
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
+# check_same_thread=False is needed for SQLite under FastAPI, which may serve a
+# request on a different thread than the one that created the engine.
+_connect_args = (
+    {"check_same_thread": False}
+    if SQLALCHEMY_DATABASE_URL.startswith("sqlite")
+    else {}
 )
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=_connect_args)
 
 # A "session" is one unit of conversation with the database. SessionLocal is a
 # factory: call it to get a fresh session. autoflush/autocommit are off so we

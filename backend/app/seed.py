@@ -4,6 +4,8 @@ Creates a demo login account plus a few realistic hosted zones with records, so
 a grader opening the hosted demo sees a populated console instead of empty tables.
 Everything here is idempotent: it only runs when the relevant table is empty.
 """
+import os
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -13,6 +15,9 @@ from .routers.zones import _default_records
 # Demo credentials shown on the login screen.
 DEMO_USERNAME = "admin"
 DEMO_PASSWORD = "admin"
+
+# Demo zones are seeded by default; tests set SEED_DEMO=0 to keep a clean DB.
+SEED_DEMO = os.environ.get("SEED_DEMO", "1") != "0"
 
 # A few realistic zones, each with a handful of records that exercise several
 # record types (A, AAAA, CNAME, MX, TXT, SRV).
@@ -60,8 +65,8 @@ def seed(db: Session) -> None:
         db.add(User(username=DEMO_USERNAME, password=DEMO_PASSWORD))
         db.commit()
 
-    # 2. Demo zones + records (only if no zones exist).
-    if db.query(HostedZone).count() == 0:
+    # 2. Demo zones + records (only if enabled and no zones exist).
+    if SEED_DEMO and db.query(HostedZone).count() == 0:
         for spec in _DEMO_ZONES:
             zone = HostedZone(
                 name=spec["name"], type=spec["type"], comment=spec["comment"]
