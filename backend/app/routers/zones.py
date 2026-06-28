@@ -10,12 +10,22 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from fastapi import Response
+
 from ..auth import get_current_user
 from ..database import get_db
 from ..models import DnsRecord, HostedZone, User
-from ..schemas import ZoneCreate, ZoneList, ZoneOut
+from ..schemas import ZoneCreate, ZoneList, ZoneOut, ZoneUpdate
 
 router = APIRouter(prefix="/api/zones", tags=["zones"])
+
+
+def _get_zone_or_404(db: Session, zone_id: str) -> HostedZone:
+    """Fetch a zone by id or raise 404 if it does not exist."""
+    zone = db.query(HostedZone).filter(HostedZone.id == zone_id).first()
+    if not zone:
+        raise HTTPException(status_code=404, detail="Hosted zone not found")
+    return zone
 
 
 def _default_records(zone: HostedZone) -> list[DnsRecord]:
@@ -88,3 +98,44 @@ def create_zone(
     db.commit()
     db.refresh(zone)
     return zone
+
+
+@router.get("/{zone_id}", response_model=ZoneOut)
+def get_zone(
+    zone_id: str,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Fetch a single hosted zone by id."""
+    return _get_zone_or_404(db, zone_id)
+
+
+@router.put("/{zone_id}", response_model=ZoneOut)
+def update_zone(
+    zone_id: str,
+    payload: ZoneUpdate,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Edit an editable field of a zone. Like Route 53, only the comment is editable
+    (the name and type of a zone are fixed once created)."""
+    zone = _get_zone_or_404(db, zone_id)
+    if payload.comment is not None:
+        zone.comment = payload.comment
+    db.commit()
+    db.refresh(zone)
+    return zone
+
+
+@router.delete("/{zone_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_zone(
+    zone_id: str,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Delete a zone. Its records are removed automatically via the cascade
+    relationship defined on the model (no orphaned records left behind)."""
+    zone = _get_zone_or_404(db, zone_id)
+    db.delete(zone)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
